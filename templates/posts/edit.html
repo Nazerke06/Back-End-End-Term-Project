@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Post{% endblock %}
+
+{% block extra_css %}
+<style>
+    .ck-editor__editable {
+        min-height: 300px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="mb-0"><i class="fas fa-edit me-2"></i>Edit Post</h2>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('posts.edit', post_id=post.id) }}" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.title.label(class="form-label") }}
+                {{ form.title(class="form-control" + (" is-invalid" if form.title.errors else ""), placeholder="Enter post title") }}
+                {% if form.title.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.title.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        {{ form.category.label(class="form-label") }}
+                        {{ form.category(class="form-select" + (" is-invalid" if form.category.errors else "")) }}
+                        {% if form.category.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.category.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        {{ form.tags.label(class="form-label") }}
+                        {{ form.tags(class="form-control" + (" is-invalid" if form.tags.errors else ""), placeholder="e.g. math, physics, research") }}
+                        {% if form.tags.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.tags.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Separate tags with commas</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.content.label(class="form-label") }}
+                {{ form.content(class="form-control rich-editor" + (" is-invalid" if form.content.errors else ""), rows="10") }}
+                {% if form.content.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.content.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.image.label(class="form-label") }}
+                {{ form.image(class="form-control" + (" is-invalid" if form.image.errors else "")) }}
+                {% if form.image.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.image.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div class="form-text">Upload a new featured image for your post (optional)</div>
+
+                <!-- Current image preview -->
+                {% if post.image_path %}
+                <div class="mt-2">
+                    <p>Current image:</p>
+                    <img src="{{ url_for('static', filename=post.image_path.replace('static/', '')) }}" class="img-fluid rounded" style="max-height: 200px;" alt="Current image">
+                </div>
+                {% endif %}
+
+                <!-- New image preview -->
+                <div class="image-preview-container">
+                    <img id="image-preview" class="img-fluid rounded" alt="Image preview">
+                </div>
+            </div>
+
+            <div class="mb-3 d-flex justify-content-between">
+                <a href="{{ url_for('posts.view', post_id=post.id) }}" class="btn btn-secondary">Cancel</a>
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+{% endblock %}
+

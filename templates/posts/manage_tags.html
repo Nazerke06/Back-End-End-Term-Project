@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Tags{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Add Tag</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('posts.manage_tags') }}">
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), placeholder="Enter tag name") }}
+                        {% if form.name.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.name.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-tags me-2"></i>Tags</h4>
+            </div>
+            <div class="card-body">
+                {% if tags %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Posts</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tag in tags %}
+                                    <tr>
+                                        <td>{{ tag.name }}</td>
+                                        <td>
+                                            <a href="{{ url_for('posts.by_tag', tag_id=tag.id) }}">
+                                                {{ tag.posts.count() }} post{% if tag.posts.count() != 1 %}s{% endif %}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <form action="{{ url_for('posts.delete_tag', tag_id=tag.id) }}" method="POST" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger delete-confirm" data-bs-toggle="tooltip" title="Delete Tag">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>No tags have been created yet.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Back to Home
+    </a>
+</div>
+{% endblock %}

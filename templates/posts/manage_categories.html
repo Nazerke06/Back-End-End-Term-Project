@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Categories{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Add Category</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('posts.manage_categories') }}">
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), placeholder="Enter category name") }}
+                        {% if form.name.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.name.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label") }}
+                        {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), placeholder="Enter category description") }}
+                        {% if form.description.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.description.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-success") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-folder me-2"></i>Categories</h4>
+            </div>
+            <div class="card-body">
+                {% if categories %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Posts</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for category in categories %}
+                                    <tr>
+                                        <td>{{ category.name }}</td>
+                                        <td>{{ category.description or '-' }}</td>
+                                        <td>
+                                            <a href="{{ url_for('posts.by_category', category_id=category.id) }}">
+                                                {{ category.posts.count() }} post{% if category.posts.count() != 1 %}s{% endif %}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a href="{{ url_for('posts.edit_category', category_id=category.id) }}" class="btn btn-outline-success">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+
+                                                {% if category.posts.count() == 0 %}
+                                                    <form action="{{ url_for('posts.delete_category', category_id=category.id) }}" method="POST" class="d-inline">
+                                                        <button type="submit" class="btn btn-outline-danger delete-confirm" data-bs-toggle="tooltip" title="Delete Category">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
+                                                {% else %}
+                                                    <button type="button" class="btn btn-outline-danger" disabled data-bs-toggle="tooltip" title="Cannot delete category with posts">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>No categories have been created yet.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Back to Home
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="mb-0"><i class="fas fa-info-circle me-2"></i>About Student Study Blog</h2>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Our Mission</h3>
+                <p>
+                    Student Study Blog is a platform designed to help students share knowledge, study notes, research findings, and academic insights with their peers. We believe in the power of collaborative learning and aim to create a supportive community for students from all disciplines.
+                </p>
+
+                <h3>What We Offer</h3>
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-pen-fancy fa-3x mb-3 text-primary"></i>
+                                <h4>Create & Share</h4>
+                                <p>Write blog posts about your studies, research, and academic experiences.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-users fa-3x mb-3 text-primary"></i>
+                                <h4>Connect</h4>
+                                <p>Connect with other students who share your academic interests.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-search fa-3x mb-3 text-primary"></i>
+                                <h4>Discover</h4>
+                                <p>Find relevant study resources and insights from your peers.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>How It Works</h3>
+                <ol>
+                    <li>
+                        <strong>Create an account</strong> - Sign up to become a member of our student community.
+                    </li>
+                    <li>
+                        <strong>Create posts</strong> - Share your knowledge through blog posts with text and images.
+                    </li>
+                    <li>
+                        <strong>Organize with categories and tags</strong> - Make your content easy to discover.
+                    </li>
+                    <li>
+                        <strong>Connect with others</strong> - Read posts from other students to enhance your learning.
+                    </li>
+                </ol>
+
+                <h3>Join Our Community</h3>
+                <p>
+                    Whether you're a high school student, undergraduate, graduate, or doctoral candidate, Student Study Blog is for you. Join our growing community of students who are passionate about sharing knowledge and learning from one another.
+                </p>
+
+                {% if not current_user.is_authenticated %}
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg me-2">Sign Up Now</a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary btn-lg">Login</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
